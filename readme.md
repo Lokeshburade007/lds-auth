@@ -53,6 +53,40 @@ npm run start:frontend    # Terminal 2 → UI on http://localhost:5173
 
 That's it. Open http://localhost:5173 and register your first account.
 
+---
+
+## Database Support
+
+SecurePool supports **MongoDB** and **SQL databases** (PostgreSQL / MySQL). Switch with one config change:
+
+```ts
+// MongoDB
+createSecurePool({ database: { type: "mongo", url: "mongodb://..." } })
+
+// PostgreSQL
+createSecurePool({ database: { type: "postgres", url: "postgresql://..." } })
+```
+
+| Database | Guide | ORM | Migration needed? |
+|----------|-------|-----|-------------------|
+| MongoDB | [DATABASE_MONGODB.md](docs/DATABASE_MONGODB.md) | Mongoose | No (auto-creates collections) |
+| PostgreSQL | [DATABASE_SQL.md](docs/DATABASE_SQL.md) | Prisma | Yes (`prisma migrate dev`) |
+| MySQL | [DATABASE_SQL.md](docs/DATABASE_SQL.md) | Prisma | Yes (`prisma migrate dev`) |
+
+---
+
+## Documentation
+
+| Document | What it covers |
+|----------|---------------|
+| [SETUP.md](SETUP.md) | Local development — prerequisites, RSA keys, `.env`, running backend + frontend |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Why monorepo, packages vs apps, dependency flow, clean architecture layers |
+| [DEPLOYMENT.md](DEPLOYMENT.md) | Production — cloud DB, Railway (backend), Vercel (frontend), npm publishing, Docker |
+| [DATABASE_MONGODB.md](docs/DATABASE_MONGODB.md) | MongoDB — local setup, Atlas cloud, collections, indexes, monitoring |
+| [DATABASE_SQL.md](docs/DATABASE_SQL.md) | PostgreSQL / MySQL — local setup, cloud providers, Prisma migrations, schema details |
+
+---
+
 ### What `npm run setup` Does
 
 The setup script runs on **Mac, Windows, and Linux** (it's a Node.js script, not bash). It will:
@@ -213,38 +247,6 @@ securepool/
 ├── DEPLOYMENT.md           # Production deployment guide
 └── README.md              # This file
 ```
-
----
-
-## Database Support
-
-SecurePool supports **MongoDB** and **SQL databases** (PostgreSQL / MySQL). Switch with one config change:
-
-```ts
-// MongoDB
-createSecurePool({ database: { type: "mongo", url: "mongodb://..." } })
-
-// PostgreSQL
-createSecurePool({ database: { type: "postgres", url: "postgresql://..." } })
-```
-
-| Database | Guide | ORM | Migration needed? |
-|----------|-------|-----|-------------------|
-| MongoDB | [DATABASE_MONGODB.md](docs/DATABASE_MONGODB.md) | Mongoose | No (auto-creates collections) |
-| PostgreSQL | [DATABASE_SQL.md](docs/DATABASE_SQL.md) | Prisma | Yes (`prisma migrate dev`) |
-| MySQL | [DATABASE_SQL.md](docs/DATABASE_SQL.md) | Prisma | Yes (`prisma migrate dev`) |
-
----
-
-## Documentation
-
-| Document | What it covers |
-|----------|---------------|
-| [SETUP.md](SETUP.md) | Local development — prerequisites, RSA keys, `.env`, running backend + frontend |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | Why monorepo, packages vs apps, dependency flow, clean architecture layers |
-| [DEPLOYMENT.md](DEPLOYMENT.md) | Production — cloud DB, Railway (backend), Vercel (frontend), npm publishing, Docker |
-| [DATABASE_MONGODB.md](docs/DATABASE_MONGODB.md) | MongoDB — local setup, Atlas cloud, collections, indexes, monitoring |
-| [DATABASE_SQL.md](docs/DATABASE_SQL.md) | PostgreSQL / MySQL — local setup, cloud providers, Prisma migrations, schema details |
 
 ---
 
