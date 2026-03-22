@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String     @id @default(uuid())
+  tenantId     String
+  email        String
+  passwordHash String?
+  isVerified   Boolean    @default(false)
+  createdAt    DateTime   @default(now())
+
+  roles        UserRole[]
+  sessions     Session[]
+  auditLogs    AuditLog[]
+
+  @@unique([email, tenantId])
+  @@index([tenantId])
+}
+
+model Role {
+  id    String     @id @default(uuid())
+  name  String     @unique
+  users UserRole[]
+}
+
+model UserRole {
+  userId String
+  roleId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  userId    String
+  tokenHash String
+  expiresAt DateTime
+  isRevoked Boolean  @default(false)
+
+  @@index([userId])
+  @@index([tokenHash])
+}
+
+model OtpCode {
+  id        String   @id @default(uuid())
+  userId    String
+  code      String
+  expiresAt DateTime
+  attempts  Int      @default(0)
+
+  @@index([userId])
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  device    String
+  ip        String
+  createdAt DateTime @default(now())
+  isActive  Boolean  @default(true)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String
+  tenantId  String
+  action    String
+  ip        String
+  metadata  Json     @default("{}")
+  timestamp DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([tenantId])
+}

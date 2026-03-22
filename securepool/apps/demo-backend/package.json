@@ -1,0 +1,19 @@
+{
+  "name": "demo-backend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@securepool/api": "1.0.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "ts-node-dev": "^2.0.0",
+    "@types/node": "^20.14.0"
+  }
+}

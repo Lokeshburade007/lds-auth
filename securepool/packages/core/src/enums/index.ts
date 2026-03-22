@@ -1,0 +1,22 @@
+export enum RoleType {
+  ADMIN = "ADMIN",
+  USER = "USER",
+  MODERATOR = "MODERATOR",
+}
+
+export enum AuthProvider {
+  EMAIL = "EMAIL",
+  GOOGLE = "GOOGLE",
+  OTP = "OTP",
+}
+
+export enum AuditAction {
+  LOGIN_SUCCESS = "LOGIN_SUCCESS",
+  LOGIN_FAILED = "LOGIN_FAILED",
+  REGISTER = "REGISTER",
+  PASSWORD_RESET = "PASSWORD_RESET",
+  TOKEN_REFRESH = "TOKEN_REFRESH",
+  LOGOUT = "LOGOUT",
+  OTP_GENERATED = "OTP_GENERATED",
+  OTP_VERIFIED = "OTP_VERIFIED",
+}

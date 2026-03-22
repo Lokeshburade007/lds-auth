@@ -1,0 +1,7 @@
+node_modules
+dist
+.turbo
+*.pem
+.env
+.env.local
+apps/demo-frontend
