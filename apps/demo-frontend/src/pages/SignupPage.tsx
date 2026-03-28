@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { useAuth } from "@securepool/react-sdk";
 import { useNavigate, Link } from "react-router-dom";
 
