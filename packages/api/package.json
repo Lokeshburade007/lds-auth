@@ -1,6 +1,6 @@
 {
   "name": "@securepool/api",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "SecurePool — drop-in Express auth API. createSecurePool() wires routes for register/login/OTP/Google SSO/refresh/sessions, plus middleware (rate limit, CORS, helmet) and Swagger docs.",
   "license": "MIT",
   "author": "Lokesh",
