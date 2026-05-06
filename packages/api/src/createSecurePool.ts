@@ -83,7 +83,8 @@ export async function createSecurePool(config: SecurePoolConfig) {
   }));
   app.use(cors({ origin: config.security?.corsOrigins || "*" }));
 
-  if (config.security?.enableRateLimit !== false) {
+  const enableRateLimit = config.security?.enableRateLimit !== false;
+  if (enableRateLimit) {
     app.use(apiRateLimiter);
   }
 
@@ -92,7 +93,7 @@ export async function createSecurePool(config: SecurePoolConfig) {
   const authorize = createAuthorize(repos.roleRepo);
 
   // Routes
-  app.use("/auth", tenantMiddleware, createAuthRoutes(authService, refreshTokenService, repos.sessionRepo, repos.auditLogRepo, tokenService, authMiddleware));
+  app.use("/auth", tenantMiddleware, createAuthRoutes(authService, refreshTokenService, repos.sessionRepo, repos.auditLogRepo, tokenService, authMiddleware, enableRateLimit));
   app.use("/sessions", authMiddleware, createSessionRoutes(repos.sessionRepo));
 
   // Health check

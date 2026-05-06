@@ -1,22 +1,56 @@
 {
   "name": "@securepool/persistence",
   "version": "1.0.0",
+  "description": "SecurePool — persistence layer. Mongoose-based MongoDB repositories and Prisma-based PostgreSQL/MySQL repositories implementing the application layer's interfaces.",
+  "license": "MIT",
+  "author": "Lokesh",
+  "homepage": "https://github.com/Lokeshburade007/lds-auth#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lokeshburade007/lds-auth.git",
+    "directory": "packages/persistence"
+  },
+  "bugs": {
+    "url": "https://github.com/Lokeshburade007/lds-auth/issues"
+  },
+  "keywords": [
+    "securepool",
+    "authentication",
+    "auth",
+    "mongodb",
+    "mongoose",
+    "prisma",
+    "postgresql",
+    "mysql",
+    "typescript"
+  ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "prisma",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "npx prisma generate && tsc",
     "clean": "rm -rf dist",
     "prisma:generate": "npx prisma generate",
-    "prisma:migrate": "npx prisma migrate dev"
+    "prisma:migrate": "npx prisma migrate dev",
+    "prepublishOnly": "npm run clean && npm run build"
   },
   "dependencies": {
-    "@securepool/core": "1.0.0",
+    "@prisma/client": "^5.18.0",
     "@securepool/application": "1.0.0",
-    "mongoose": "^8.5.0",
-    "@prisma/client": "^5.18.0"
+    "@securepool/core": "1.0.0",
+    "mongoose": "^8.5.0"
   },
   "devDependencies": {
-    "typescript": "^5.5.0",
-    "prisma": "^5.18.0"
+    "@types/node": "^20.14.0",
+    "prisma": "^5.18.0",
+    "typescript": "^6.0.3"
   }
 }

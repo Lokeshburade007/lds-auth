@@ -1,16 +1,46 @@
 {
   "name": "@securepool/application",
   "version": "1.0.0",
+  "description": "SecurePool — application/business-logic layer. AuthService, RefreshTokenService and the interface contracts the infrastructure & persistence layers implement.",
+  "license": "MIT",
+  "author": "Lokesh",
+  "homepage": "https://github.com/Lokeshburade007/lds-auth#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lokeshburade007/lds-auth.git",
+    "directory": "packages/application"
+  },
+  "bugs": {
+    "url": "https://github.com/Lokeshburade007/lds-auth/issues"
+  },
+  "keywords": [
+    "securepool",
+    "authentication",
+    "auth",
+    "service",
+    "use-cases",
+    "typescript"
+  ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build"
   },
   "dependencies": {
     "@securepool/core": "1.0.0"
   },
   "devDependencies": {
-    "typescript": "^5.5.0"
+    "@types/node": "^20.14.0",
+    "typescript": "^6.0.3"
   }
 }

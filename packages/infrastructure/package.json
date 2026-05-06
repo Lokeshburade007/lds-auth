@@ -1,24 +1,57 @@
 {
   "name": "@securepool/infrastructure",
   "version": "1.0.0",
+  "description": "SecurePool — infrastructure adapters: bcrypt password hashing, RS256 JWT, OTP service, Nodemailer email, Google SSO verification.",
+  "license": "MIT",
+  "author": "Lokesh",
+  "homepage": "https://github.com/Lokeshburade007/lds-auth#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lokeshburade007/lds-auth.git",
+    "directory": "packages/infrastructure"
+  },
+  "bugs": {
+    "url": "https://github.com/Lokeshburade007/lds-auth/issues"
+  },
+  "keywords": [
+    "securepool",
+    "authentication",
+    "auth",
+    "jwt",
+    "bcrypt",
+    "otp",
+    "nodemailer",
+    "google-sso",
+    "typescript"
+  ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build"
   },
   "dependencies": {
     "@securepool/core": "1.0.0",
     "@securepool/application": "1.0.0",
     "bcrypt": "^5.1.1",
-    "jsonwebtoken": "^9.0.2",
     "google-auth-library": "^9.14.0",
+    "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.0"
   },
   "devDependencies": {
-    "typescript": "^5.5.0",
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.7",
-    "@types/nodemailer": "^6.4.0"
+    "@types/node": "^20.14.0",
+    "@types/nodemailer": "^6.4.0",
+    "typescript": "^6.0.3"
   }
 }

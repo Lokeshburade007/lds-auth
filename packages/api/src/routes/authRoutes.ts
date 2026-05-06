@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, RequestHandler } from "express";
 import { AuthService, RefreshTokenService } from "@securepool/application";
 import { AuthenticatedRequest } from "../middleware/authMiddleware";
 import { loginRateLimiter, otpRateLimiter } from "../middleware/rateLimiter";
@@ -15,8 +15,12 @@ export function createAuthRoutes(
   auditLogRepo: IAuditLogRepository,
   tokenService: ITokenService,
   authMiddleware: (req: any, res: any, next: any) => void,
+  enableRateLimit: boolean = true,
 ): Router {
   const router = Router();
+  const noopMiddleware: RequestHandler = (_req, _res, next) => next();
+  const loginLimiter = enableRateLimit ? loginRateLimiter : noopMiddleware;
+  const otpLimiter = enableRateLimit ? otpRateLimiter : noopMiddleware;
 
   // POST /auth/register - creates user + sends verification OTP
   router.post("/register", async (req: AuthenticatedRequest, res) => {
@@ -66,7 +70,7 @@ export function createAuthRoutes(
   });
 
   // POST /auth/login
-  router.post("/login", loginRateLimiter, async (req: AuthenticatedRequest, res) => {
+  router.post("/login", loginLimiter, async (req: AuthenticatedRequest, res) => {
     try {
       const { email, password } = req.body;
       const tenantId = req.tenantId || req.headers["x-tenant-id"] as string;
@@ -128,7 +132,7 @@ export function createAuthRoutes(
   });
 
   // POST /auth/otp/request
-  router.post("/otp/request", otpRateLimiter, async (req: AuthenticatedRequest, res) => {
+  router.post("/otp/request", otpLimiter, async (req: AuthenticatedRequest, res) => {
     try {
       const { email } = req.body;
       const tenantId = req.tenantId || req.headers["x-tenant-id"] as string;
@@ -175,7 +179,7 @@ export function createAuthRoutes(
   });
 
   // POST /auth/forgot-password - sends OTP
-  router.post("/forgot-password", otpRateLimiter, async (req: AuthenticatedRequest, res) => {
+  router.post("/forgot-password", otpLimiter, async (req: AuthenticatedRequest, res) => {
     try {
       const { email } = req.body;
       const tenantId = req.tenantId || req.headers["x-tenant-id"] as string;

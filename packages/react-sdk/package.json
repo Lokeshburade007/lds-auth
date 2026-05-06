@@ -1,23 +1,55 @@
 {
   "name": "@securepool/react-sdk",
   "version": "1.0.0",
+  "description": "SecurePool — React SDK. <SecurePoolProvider/>, useAuth() hook, and pre-built UI (LoginForm, SignupForm, OTPVerification, GoogleLoginButton, SessionList).",
+  "license": "MIT",
+  "author": "Lokesh",
+  "homepage": "https://github.com/Lokeshburade007/lds-auth#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lokeshburade007/lds-auth.git",
+    "directory": "packages/react-sdk"
+  },
+  "bugs": {
+    "url": "https://github.com/Lokeshburade007/lds-auth/issues"
+  },
+  "keywords": [
+    "securepool",
+    "authentication",
+    "auth",
+    "react",
+    "react-hooks",
+    "jwt",
+    "otp",
+    "google-sso",
+    "typescript"
+  ],
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf dist"
-  },
-  "devDependencies": {
-    "typescript": "^5.5.0",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^6.0.3"
   }
 }

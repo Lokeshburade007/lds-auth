@@ -1,6 +1,7 @@
 {
   "name": "securepool",
-"version": "1.0.0",
+  "version": "1.0.0",
+  "private": true,
   "packageManager": "npm@11.6.2",
   "workspaces": [
     "packages/*",
@@ -8,14 +9,17 @@
   ],
   "scripts": {
     "setup": "node scripts/setup.js",
-    "build": "turbo run build",
+    "build": "turbo run build --filter=./packages/*",
     "dev": "turbo run dev",
     "clean": "turbo run clean",
     "start:backend": "cd apps/demo-backend && npx ts-node src/index.ts",
-    "start:frontend": "cd apps/demo-frontend && npx vite"
+    "start:frontend": "cd apps/demo-frontend && npx vite",
+    "publish:dry": "node scripts/publish-all.mjs --dry-run",
+    "publish:all": "npm run build && node scripts/publish-all.mjs",
+    "version:bump": "node scripts/version-bump.mjs"
   },
   "devDependencies": {
     "turbo": "^2.0.0",
-    "typescript": "^5.5.0"
+    "typescript": "^6.0.3"
   }
 }
