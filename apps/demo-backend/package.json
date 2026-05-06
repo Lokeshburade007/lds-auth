@@ -8,7 +8,7 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
-    "@securepool/api": "1.0.0",
+    "@securepool/api": "*",
     "dotenv": "^16.4.5"
   },
   "devDependencies": {

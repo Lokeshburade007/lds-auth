@@ -17,13 +17,20 @@ The repo is structured as 6 individual scoped packages under `@securepool/*`. Th
 
 The scope `@securepool` doesn't match your npm username, so you need to claim it as an org. Free for public packages.
 
+**npm doesn't have a `org create` CLI command** — it's web-only:
+
+1. Go to **https://www.npmjs.com/org/create**
+2. Org name: `securepool`
+3. Plan: **Free** (public packages only — that's what we want)
+4. Confirm — you'll be set as `owner` automatically
+
+After creation, verify:
+
 ```bash
-npm org create securepool
+npm org ls securepool
 ```
 
-Or via the web UI: https://www.npmjs.com/org/create
-
-If the org already exists and you're a member, skip this.
+Should list `lokeshburade007` with `owner` access.
 
 ### 2. Verify login + scope membership
 
