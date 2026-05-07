@@ -1,6 +1,11 @@
 # Publishing SecurePool to npm
 
-The repo is structured as 6 individual scoped packages under `@securepool/*`. They're published in dependency order so each consumer can resolve its peers from the registry.
+The repo publishes **7 packages** to npm:
+
+- 6 layered scoped packages under `@securepool/*` for fine-grained installs.
+- 1 unscoped umbrella `securepool` that depends on all 6 — so `npm i securepool` is the one-liner install. Consumers then use subpath imports: `securepool/core`, `securepool/api`, `securepool/react-sdk`, etc.
+
+Publish order (matters because each consumer must be able to resolve its deps from the registry):
 
 | # | Package | Depends on |
 |---|--------|-----------|
@@ -10,6 +15,7 @@ The repo is structured as 6 individual scoped packages under `@securepool/*`. Th
 | 4 | `@securepool/persistence` | core, application |
 | 5 | `@securepool/api` | core, application, infrastructure, persistence |
 | 6 | `@securepool/react-sdk` | (peer: react ≥18) |
+| 7 | `securepool` (umbrella) | all 6 above |
 
 ## One-time setup
 
@@ -97,18 +103,19 @@ npm run publish:dry      # confirm the plan
 npm run publish:all      # publish for real
 ```
 
-## Current state (first publish)
+## Current state
 
 | Package | Local version | On npm |
 |---------|--------------|--------|
-| `@securepool/core` | 1.0.0 | — |
-| `@securepool/application` | 1.0.0 | — |
-| `@securepool/infrastructure` | 1.0.0 | — |
-| `@securepool/persistence` | 1.0.0 | — |
-| `@securepool/api` | 1.0.2 | — |
-| `@securepool/react-sdk` | 1.0.0 | — |
+| `@securepool/core` | 1.0.0 | 1.0.0 ✓ |
+| `@securepool/application` | 1.0.0 | 1.0.0 ✓ |
+| `@securepool/infrastructure` | 1.0.0 | 1.0.0 ✓ |
+| `@securepool/persistence` | 1.0.0 | 1.0.0 ✓ |
+| `@securepool/api` | 1.0.3 | 1.0.3 ✓ |
+| `@securepool/react-sdk` | 1.0.0 | 1.0.0 ✓ |
+| `securepool` (umbrella) | 1.0.1 | 1.0.0 (old, no deps) |
 
-> Note: `@securepool/api` is at 1.0.2 because runtime changes happened to it (gated rate-limiters by config flag). Cross-package deps that reference `"@securepool/core": "1.0.0"` will resolve correctly after we publish core@1.0.0 first.
+> The umbrella was bumped to `1.0.1` because an empty `securepool@1.0.0` is already on npm from before this restructure. Run `npm run publish:all` to ship `securepool@1.0.1` with the proper deps + subpath exports.
 
 ## Recovering from a half-finished publish
 

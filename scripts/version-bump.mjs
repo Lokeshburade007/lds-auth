@@ -28,6 +28,7 @@ const PACKAGES = [
   "persistence",
   "api",
   "react-sdk",
+  "securepool",
 ];
 
 const args = process.argv.slice(2);

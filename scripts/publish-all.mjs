@@ -22,6 +22,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 
 // Dependency order — packages must be published in this order so cross-refs resolve.
+// The unscoped "securepool" umbrella publishes last because its dependencies
+// reference the @securepool/* packages and need them to already be live.
 const PACKAGES_IN_ORDER = [
   "core",
   "application",
@@ -29,6 +31,7 @@ const PACKAGES_IN_ORDER = [
   "persistence",
   "api",
   "react-sdk",
+  "securepool",
 ];
 
 const args = process.argv.slice(2);

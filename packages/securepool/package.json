@@ -1,0 +1,94 @@
+{
+  "name": "securepool",
+  "version": "1.0.2",
+  "description": "SecurePool — all-in-one authentication library for Node.js + React. Single install, subpath imports: securepool/core, securepool/application, securepool/infrastructure, securepool/persistence, securepool/api, securepool/react-sdk.",
+  "license": "MIT",
+  "author": "Lokesh",
+  "homepage": "https://github.com/Lokeshburade007/lds-auth#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lokeshburade007/lds-auth.git",
+    "directory": "packages/securepool"
+  },
+  "bugs": {
+    "url": "https://github.com/Lokeshburade007/lds-auth/issues"
+  },
+  "keywords": [
+    "securepool",
+    "authentication",
+    "auth",
+    "jwt",
+    "otp",
+    "express",
+    "react",
+    "mongoose",
+    "prisma",
+    "google-sso",
+    "typescript"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "default": "./dist/core/index.js"
+    },
+    "./application": {
+      "types": "./dist/application/index.d.ts",
+      "default": "./dist/application/index.js"
+    },
+    "./infrastructure": {
+      "types": "./dist/infrastructure/index.d.ts",
+      "default": "./dist/infrastructure/index.js"
+    },
+    "./persistence": {
+      "types": "./dist/persistence/index.d.ts",
+      "default": "./dist/persistence/index.js"
+    },
+    "./api": {
+      "types": "./dist/api/index.d.ts",
+      "default": "./dist/api/index.js"
+    },
+    "./react-sdk": {
+      "types": "./dist/react-sdk/index.d.ts",
+      "default": "./dist/react-sdk/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build"
+  },
+  "dependencies": {
+    "@securepool/core": "^1.0.0",
+    "@securepool/application": "^1.0.0",
+    "@securepool/infrastructure": "^1.0.0",
+    "@securepool/persistence": "^1.0.0",
+    "@securepool/api": "^1.0.3",
+    "@securepool/react-sdk": "^1.0.0"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}
