@@ -1,5 +1,6 @@
 node_modules/
 dist/
+packages/securepool/prisma/
 .turbo/
 *.tsbuildinfo
 .env
