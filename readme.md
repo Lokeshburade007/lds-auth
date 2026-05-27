@@ -1,6 +1,6 @@
 # SecurePool
 
-Production-grade, self-hosted authentication framework for Node.js and React. Plug-and-play JWT auth, OTP, Google SSO, multi-tenancy, session management — distributed as NPM packages.
+Production-grade, self-hosted authentication framework for Node.js and React. Plug-and-play JWT auth, OTP, Google SSO, multi-tenancy, session management — distributed as a single NPM package (`securepool`) with layered subpath imports.
 
 ---
 
@@ -125,7 +125,7 @@ Get-Process -Id (Get-NetTCPConnection -LocalPort 5001).OwningProcess | Stop-Proc
 
 ## Features
 
-- **JWT Authentication** — RS256-based access + refresh tokens with rotation
+- **JWT Authentication** — RS256-based access + refresh tokens with rotation. Tokens carry the user's `email` claim out of the box, plus a **`customClaims` hook** to inject app-specific claims (resolved fresh on every mint, including refresh)
 - **OTP Login** — Email-based one-time passwords with expiry and attempt limits
 - **Email Verification** — OTP-verified registration (user created only after verification)
 - **Password Management** — Forgot password (OTP reset) + change password (authenticated)
@@ -144,18 +144,36 @@ Get-Process -Id (Get-NetTCPConnection -LocalPort 5001).OwningProcess | Stop-Proc
 
 ## Install as NPM Package
 
-**Backend:**
+**One package, one install.** As of `1.1.0`, SecurePool ships as a single
+self-contained package — `securepool` — that bundles every layer. Import
+the layer you need via a subpath (`securepool/api`, `securepool/react-sdk`,
+`securepool/core`, …); there are no separate scoped packages to install.
 
 ```bash
-npm install @securepool/api
+npm install securepool
 ```
 
+**Backend:**
+
 ```ts
-import { createSecurePool } from "@securepool/api";
+import { createSecurePool } from "securepool/api";
 
 const { app } = await createSecurePool({
   database: { type: "mongo", url: "mongodb://localhost:27017/myapp" },
   jwt: { privateKey: "...", publicKey: "..." },
+
+  // OPTIONAL — enrich every access token with app-specific claims.
+  // Called on each mint (login / register / OTP / Google / refresh) so
+  // claims stay fresh across the refresh cycle. The `email` claim is
+  // added automatically; this merges on top. Reserved keys
+  // (sub/tenantId/iat/exp) are protected. Keep it cheap — it's on the
+  // auth hot path. Do NOT put rapidly-mutating data (e.g. a billing
+  // plan) here if your access-token TTL is long — resolve those
+  // server-side per request instead.
+  customClaims: async ({ userId, tenantId }) => {
+    const roles = await myRoleStore.getRoles(userId);
+    return { roles };
+  },
 });
 
 app.listen(3000);
@@ -164,12 +182,8 @@ app.listen(3000);
 
 **Frontend:**
 
-```bash
-npm install @securepool/react-sdk
-```
-
 ```tsx
-import { SecurePoolProvider, LoginForm, useAuth } from "@securepool/react-sdk";
+import { SecurePoolProvider, LoginForm, useAuth } from "securepool/react-sdk";
 
 function App() {
   return (
@@ -182,16 +196,20 @@ function App() {
 
 ---
 
-## Packages
+## Layers (subpath imports)
 
-| Package | Description |
+The library is organized in clean-architecture layers. They're internal
+build inputs bundled into the single `securepool` package — import each
+via its subpath:
+
+| Subpath import | Description |
 |---------|-------------|
-| `@securepool/core` | Entities and enums (User, Role, Session, OTP, etc.) |
-| `@securepool/application` | Business logic, interfaces, AuthService |
-| `@securepool/infrastructure` | JWT, bcrypt, OTP, Nodemailer, Google SSO |
-| `@securepool/persistence` | MongoDB + PostgreSQL repository implementations |
-| `@securepool/api` | Express routes, middleware, `createSecurePool()` |
-| `@securepool/react-sdk` | React provider, `useAuth()` hook, UI components |
+| `securepool/core` | Entities and enums (User, Role, Session, OTP, etc.) |
+| `securepool/application` | Business logic, interfaces, AuthService, `ClaimsProvider` |
+| `securepool/infrastructure` | JWT, bcrypt, OTP, Nodemailer, Google SSO |
+| `securepool/persistence` | MongoDB + PostgreSQL repository implementations |
+| `securepool/api` | Express routes, middleware, `createSecurePool()` |
+| `securepool/react-sdk` | React provider, `useAuth()` hook, UI components |
 
 ---
 

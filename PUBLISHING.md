@@ -1,21 +1,30 @@
 # Publishing SecurePool to npm
 
-The repo publishes **7 packages** to npm:
+The repo publishes **ONE package** to npm: the unscoped `securepool`.
 
-- 6 layered scoped packages under `@securepool/*` for fine-grained installs.
-- 1 unscoped umbrella `securepool` that depends on all 6 — so `npm i securepool` is the one-liner install. Consumers then use subpath imports: `securepool/core`, `securepool/api`, `securepool/react-sdk`, etc.
+As of `1.1.0` it is a **self-contained bundle** — `tsup` inlines the six
+`@securepool/*` workspace layers (JS **and** type declarations) into
+`securepool`'s own `dist`. A single `npm i securepool` is therefore
+complete: nothing else needs to exist on the registry. Consumers import
+layers via subpaths: `securepool/core`, `securepool/api`,
+`securepool/react-sdk`, etc.
 
-Publish order (matters because each consumer must be able to resolve its deps from the registry):
+The `@securepool/*` scoped packages are **internal build inputs only** —
+they are no longer published. (Older `@securepool/*@1.0.x` versions remain
+on npm from before this change but are unused by `securepool@1.1.0+`.)
 
-| # | Package | Depends on |
-|---|--------|-----------|
-| 1 | `@securepool/core` | — |
-| 2 | `@securepool/application` | core |
-| 3 | `@securepool/infrastructure` | core, application |
-| 4 | `@securepool/persistence` | core, application |
-| 5 | `@securepool/api` | core, application, infrastructure, persistence |
-| 6 | `@securepool/react-sdk` | (peer: react ≥18) |
-| 7 | `securepool` (umbrella) | all 6 above |
+Real third-party deps (express, bcrypt, mongoose, @prisma/client, react, …)
+stay **external** in the bundle and are declared in `securepool`'s own
+`dependencies` / `peerDependencies`, so they resolve from the consumer's
+`node_modules` rather than being duplicated into the tarball.
+
+### Build pipeline
+
+`turbo run build` builds the six layers with `tsc` first (so their `dist`
+types exist for tsup to resolve), then the umbrella runs `tsup`
+(`packages/securepool/tsup.config.ts`): `noExternal: [/^@securepool\//]`
+inlines the layer JS and `dts: { resolve: [/^@securepool\//] }` inlines
+their types into subpath-keyed output.
 
 ## One-time setup
 

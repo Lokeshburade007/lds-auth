@@ -21,16 +21,13 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 
-// Dependency order — packages must be published in this order so cross-refs resolve.
-// The unscoped "securepool" umbrella publishes last because its dependencies
-// reference the @securepool/* packages and need them to already be live.
+// We publish ONLY the unscoped "securepool" umbrella. As of 1.1.0 it is a
+// fully self-contained bundle (tsup inlines the six @securepool/* workspace
+// layers into its own dist — JS + types), so a single `npm i securepool`
+// needs nothing else on the registry. The scoped @securepool/* packages are
+// internal build inputs only and are no longer published. Consumers keep
+// using the same subpath imports: securepool/core, securepool/api, etc.
 const PACKAGES_IN_ORDER = [
-  "core",
-  "application",
-  "infrastructure",
-  "persistence",
-  "api",
-  "react-sdk",
   "securepool",
 ];
 
