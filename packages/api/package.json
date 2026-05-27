@@ -1,6 +1,6 @@
 {
   "name": "@securepool/api",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "SecurePool — drop-in Express auth API. createSecurePool() wires routes for register/login/OTP/Google SSO/refresh/sessions, plus middleware (rate limit, CORS, helmet) and Swagger docs.",
   "license": "MIT",
   "author": "Lokesh",
@@ -40,10 +40,10 @@
     "prepublishOnly": "npm run clean && npm run build"
   },
   "dependencies": {
-    "@securepool/application": "1.0.0",
-    "@securepool/core": "1.0.0",
-    "@securepool/infrastructure": "1.0.0",
-    "@securepool/persistence": "1.0.0",
+    "@securepool/application": "1.1.0",
+    "@securepool/core": "1.1.0",
+    "@securepool/infrastructure": "1.1.0",
+    "@securepool/persistence": "1.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",

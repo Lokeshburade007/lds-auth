@@ -1,7 +1,17 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 import { OtpCode } from "@securepool/core";
 import { IOtpRepository } from "@securepool/application";
 
+/**
+ * Prisma-backed OTP repository.
+ *
+ * The `metadata` field is opaque JSON. `AuthService.register()` uses it to
+ * stash `{ email, passwordHash, tenantId }` between issuing the OTP and
+ * verifying it; without persisting the metadata, `verifyEmail` cannot
+ * recover the passwordHash and throws "Registration data not found".
+ * The Mongo repository has always stored it; Prisma was previously
+ * missing both the column and the writes — fixed in 1.0.3.
+ */
 export class PrismaOtpRepository implements IOtpRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
@@ -13,6 +23,7 @@ export class PrismaOtpRepository implements IOtpRepository {
         code: otp.code,
         expiresAt: otp.expiresAt,
         attempts: otp.attempts,
+        metadata: (otp.metadata ?? Prisma.JsonNull) as Prisma.InputJsonValue,
       },
     });
   }
@@ -23,7 +34,14 @@ export class PrismaOtpRepository implements IOtpRepository {
       orderBy: { expiresAt: "desc" },
     });
     if (!record) return null;
-    return new OtpCode(record.id, record.userId, record.code, record.expiresAt, record.attempts);
+    return new OtpCode(
+      record.id,
+      record.userId,
+      record.code,
+      record.expiresAt,
+      record.attempts,
+      (record.metadata as Record<string, string> | null) ?? undefined,
+    );
   }
 
   async update(otp: OtpCode): Promise<void> {
@@ -33,6 +51,7 @@ export class PrismaOtpRepository implements IOtpRepository {
         code: otp.code,
         expiresAt: otp.expiresAt,
         attempts: otp.attempts,
+        metadata: (otp.metadata ?? Prisma.JsonNull) as Prisma.InputJsonValue,
       },
     });
   }

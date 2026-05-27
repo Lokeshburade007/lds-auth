@@ -1,6 +1,6 @@
 {
   "name": "@securepool/react-sdk",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "SecurePool — React SDK. <SecurePoolProvider/>, useAuth() hook, and pre-built UI (LoginForm, SignupForm, OTPVerification, GoogleLoginButton, SessionList).",
   "license": "MIT",
   "author": "Lokesh",

@@ -2,7 +2,7 @@ import crypto from "crypto";
 import { User, AuditLog, AuditAction, RefreshToken } from "@securepool/core";
 import { IUserRepository } from "../interfaces/IUserRepository";
 import { IPasswordHasher } from "../interfaces/IPasswordHasher";
-import { ITokenService } from "../interfaces/ITokenService";
+import { ITokenService, ClaimsProvider } from "../interfaces/ITokenService";
 import { ITokenRepository } from "../interfaces/ITokenRepository";
 import { IOtpService } from "../interfaces/IOtpService";
 import { IAuditLogRepository } from "../interfaces/IAuditLogRepository";
@@ -21,6 +21,7 @@ export class AuthService {
     private readonly otpService?: IOtpService,
     private readonly auditLogRepository?: IAuditLogRepository,
     private readonly emailService?: IEmailService,
+    private readonly claimsProvider?: ClaimsProvider,
   ) {}
 
   // Helper: generate tokens and save refresh token to DB
@@ -28,7 +29,12 @@ export class AuthService {
     userId: string,
     tenantId: string,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    const accessToken = await this.tokenService.generateAccessToken(userId, tenantId);
+    // Resolve extra JWT claims (e.g. email, app-specific) at issuance so
+    // they're carried in the access token. Falls back to no extra claims.
+    const extraClaims = this.claimsProvider
+      ? await this.claimsProvider({ userId, tenantId })
+      : {};
+    const accessToken = await this.tokenService.generateAccessToken(userId, tenantId, extraClaims);
     const refreshToken = await this.tokenService.generateRefreshToken(userId);
 
     // Save refresh token to DB so it can be looked up on refresh

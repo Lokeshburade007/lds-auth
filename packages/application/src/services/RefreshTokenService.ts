@@ -1,12 +1,13 @@
 import crypto from "crypto";
 import { RefreshToken } from "@securepool/core";
 import { ITokenRepository } from "../interfaces/ITokenRepository";
-import { ITokenService } from "../interfaces/ITokenService";
+import { ITokenService, ClaimsProvider } from "../interfaces/ITokenService";
 
 export class RefreshTokenService {
   constructor(
     private readonly tokenRepository: ITokenRepository,
     private readonly tokenService: ITokenService,
+    private readonly claimsProvider?: ClaimsProvider,
   ) {}
 
   async refresh(
@@ -30,10 +31,17 @@ export class RefreshTokenService {
     // Revoke old token (rotation)
     await this.tokenRepository.revoke(existingToken.id);
 
-    // Generate new token pair
+    // Generate new token pair. Re-resolve extra claims (e.g. email) so
+    // they survive the refresh cycle — without this the access token
+    // would lose its identity claims after the first 24h renewal.
+    const tenantId = "default"; // tenantId from the original token
+    const extraClaims = this.claimsProvider
+      ? await this.claimsProvider({ userId: existingToken.userId, tenantId })
+      : {};
     const accessToken = await this.tokenService.generateAccessToken(
       existingToken.userId,
-      "default", // tenantId from the original token
+      tenantId,
+      extraClaims,
     );
     const newRefreshToken = await this.tokenService.generateRefreshToken(
       existingToken.userId,

@@ -1,7 +1,7 @@
 import express, { Express } from "express";
 import cors from "cors";
 import helmet from "helmet";
-import { AuthService, RefreshTokenService } from "@securepool/application";
+import { AuthService, RefreshTokenService, ClaimsProvider } from "@securepool/application";
 import { JwtTokenService, BcryptHasher, OtpServiceImpl, GoogleAuthServiceImpl, NodemailerEmailService } from "@securepool/infrastructure";
 import { createRepositories } from "@securepool/persistence";
 import { createAuthMiddleware } from "./middleware/authMiddleware";
@@ -41,6 +41,17 @@ export interface SecurePoolConfig {
     enableRateLimit?: boolean;
     corsOrigins?: string | string[];
   };
+  /**
+   * Optional hook to enrich every access token with app-specific claims.
+   * Called on each token mint (login / register / OTP / Google / refresh)
+   * so claims stay fresh. The `email` claim is added automatically from
+   * the user record; anything returned here is merged on top (reserved
+   * keys sub/tenantId/iat/exp are protected). Keep it cheap — it runs on
+   * the auth hot path. Do NOT put rapidly-mutating data (e.g. a billing
+   * plan) here if your access-token TTL is long — it will go stale until
+   * the next refresh; resolve those server-side per request instead.
+   */
+  customClaims?: ClaimsProvider;
 }
 
 export async function createSecurePool(config: SecurePoolConfig) {
@@ -70,9 +81,26 @@ export async function createSecurePool(config: SecurePoolConfig) {
       })
     : undefined;
 
+  // Claims provider — adds `email` from the user record on every token
+  // mint (so it survives refresh), then merges any app-supplied claims.
+  // Best-effort: a lookup failure never blocks token issuance.
+  const claimsProvider: ClaimsProvider = async ({ userId, tenantId }) => {
+    const claims: Record<string, unknown> = {};
+    try {
+      const u = await repos.userRepo.findById(userId);
+      if (u?.email) claims.email = u.email;
+    } catch {
+      /* email is best-effort — never block auth on it */
+    }
+    if (config.customClaims) {
+      Object.assign(claims, await config.customClaims({ userId, tenantId }));
+    }
+    return claims;
+  };
+
   // Initialize application services
-  const authService = new AuthService(repos.userRepo, hasher, tokenService, repos.tokenRepo, otpService, repos.auditLogRepo, emailService);
-  const refreshTokenService = new RefreshTokenService(repos.tokenRepo, tokenService);
+  const authService = new AuthService(repos.userRepo, hasher, tokenService, repos.tokenRepo, otpService, repos.auditLogRepo, emailService, claimsProvider);
+  const refreshTokenService = new RefreshTokenService(repos.tokenRepo, tokenService, claimsProvider);
 
   // Create Express app
   const app: Express = express();

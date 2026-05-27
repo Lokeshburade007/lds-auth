@@ -55,6 +55,12 @@ model OtpCode {
   code      String
   expiresAt DateTime
   attempts  Int      @default(0)
+  // Opaque payload preserved between OTP send + verify (e.g. AuthService.register
+  // stores {email, passwordHash, tenantId} so verifyEmail can finalise the user).
+  // Mongo persistence already stored this on OtpModel; Prisma was missing
+  // both the column and the writes, so Postgres registrations failed with
+  // "Registration data not found". Fixed in 1.0.3.
+  metadata  Json?
 
   @@index([userId])
 }

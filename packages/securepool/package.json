@@ -1,6 +1,6 @@
 {
   "name": "securepool",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "SecurePool — all-in-one authentication library for Node.js + React. Single install, subpath imports: securepool/core, securepool/application, securepool/infrastructure, securepool/persistence, securepool/api, securepool/react-sdk.",
   "license": "MIT",
   "author": "Lokesh",
@@ -69,12 +69,12 @@
     "prepublishOnly": "npm run clean && npm run build"
   },
   "dependencies": {
-    "@securepool/core": "^1.0.0",
-    "@securepool/application": "^1.0.0",
-    "@securepool/infrastructure": "^1.0.0",
-    "@securepool/persistence": "^1.0.0",
-    "@securepool/api": "^1.0.3",
-    "@securepool/react-sdk": "^1.0.0"
+    "@securepool/core": "1.1.0",
+    "@securepool/application": "1.1.0",
+    "@securepool/infrastructure": "1.1.0",
+    "@securepool/persistence": "1.1.0",
+    "@securepool/api": "1.1.0",
+    "@securepool/react-sdk": "1.1.0"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
